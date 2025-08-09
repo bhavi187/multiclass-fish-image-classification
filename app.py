@@ -3,15 +3,12 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 
-# Load TFLite model and allocate tensors
 interpreter = tf.lite.Interpreter(model_path="small_fish_classifier_quant.tflite")
 interpreter.allocate_tensors()
 
-# Get input and output details
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
-# Classes (same as before)
 classes = [
     'fish sea_food black_sea_sprat',
     'fish sea_food gilt_head_bream',
@@ -40,16 +37,15 @@ if uploaded_file:
 
     input_data = preprocess(img)
 
-    # Set the tensor to point to the input data
+
     interpreter.set_tensor(input_details[0]['index'], input_data)
 
-    # Run inference
     interpreter.invoke()
 
-    # Get the results from the output tensor
     output_data = interpreter.get_tensor(output_details[0]['index'])
     pred_idx = np.argmax(output_data)
     confidence = output_data[0][pred_idx]
 
     st.write(f"**Prediction:** {classes[pred_idx].replace('fish sea_food ', '').replace('_', ' ').title()}")
     st.write(f"**Confidence:** {confidence * 100:.2f}%")
+
