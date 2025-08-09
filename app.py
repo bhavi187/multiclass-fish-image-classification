@@ -22,6 +22,7 @@ classes = [
     'fish sea_food striped_red_mullet',
     'fish sea_food trout'
 ]
+
 st.title("🐟 Fish Classifier with TFLite")
 
 uploaded_file = st.file_uploader("Upload a fish image", type=["jpg", "jpeg", "png"])
@@ -29,7 +30,7 @@ uploaded_file = st.file_uploader("Upload a fish image", type=["jpg", "jpeg", "pn
 def preprocess(img):
     img = img.resize((150, 150))
     img = np.array(img).astype(np.float32) / 255.0
-    img = np.expand_dims(img, axis=0)  # batch dimension
+    img = np.expand_dims(img, axis=0)
     return img
 
 if uploaded_file:
@@ -38,16 +39,16 @@ if uploaded_file:
 
     input_data = preprocess(img)
 
-
     interpreter.set_tensor(input_details[0]['index'], input_data)
-
     interpreter.invoke()
 
     output_data = interpreter.get_tensor(output_details[0]['index'])
     pred_idx = np.argmax(output_data)
-    confidence = output_data[0][pred_idx]
 
-    st.write(f"**Prediction:** {classes[pred_idx].replace('fish sea_food ', '').replace('_', ' ').title()}")
-    st.write(f"**Confidence:** {confidence * 100:.2f}%")
-
-
+    if pred_idx >= len(classes):
+        st.error("Prediction index out of range.")
+    else:
+        confidence = output_data[0][pred_idx]
+        pred_label = classes[pred_idx].replace('fish sea_food ', '').replace('_', ' ').title()
+        st.write(f"**Prediction:** {pred_label}")
+        st.write(f"**Confidence:** {confidence * 100:.2f}%")
