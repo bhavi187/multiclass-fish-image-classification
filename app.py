@@ -10,6 +10,8 @@ input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
 classes = [
+    'animal fish',
+    'animal fish bass',
     'fish sea_food black_sea_sprat',
     'fish sea_food gilt_head_bream',
     'fish sea_food hourse_mackerel',
@@ -20,7 +22,6 @@ classes = [
     'fish sea_food striped_red_mullet',
     'fish sea_food trout'
 ]
-
 st.title("🐟 Fish Classifier with TFLite")
 
 uploaded_file = st.file_uploader("Upload a fish image", type=["jpg", "jpeg", "png"])
@@ -48,4 +49,5 @@ if uploaded_file:
 
     st.write(f"**Prediction:** {classes[pred_idx].replace('fish sea_food ', '').replace('_', ' ').title()}")
     st.write(f"**Confidence:** {confidence * 100:.2f}%")
+
 
